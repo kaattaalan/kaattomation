@@ -4,7 +4,7 @@ from .utils.ngrok_utils import fetch_ngrok_public_urls
 
 
 def setup(env):
-    BOT_TOKEN = env.get("BOT_TOKEN")
+    BOT_TOKEN = env.get("NGROK_BOT_TOKEN")
     allowed_usernames = set(env.get("ALLOWED_USERNAMES").split(','))
 
     # Initialize bot
@@ -20,9 +20,12 @@ def setup(env):
 
     @bot.message_handler(commands=['ngrok'], func=check_username)
     def handle_ngrok(message):
-        public_urls = fetch_ngrok_public_urls()
-        for url in public_urls:
-            bot.send_message(message.chat.id, url)
+        try:
+            public_urls = fetch_ngrok_public_urls()
+            for url in public_urls:
+                bot.send_message(message.chat.id, url)
+        except Exception:
+            bot.reply_to(message, "Ngrok is not running")
 
     @bot.message_handler(func=lambda message: check_username(message) and True)
     def echo_all(message):
