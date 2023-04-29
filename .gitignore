@@ -1,0 +1,4 @@
+/.env
+/.vscode
+/bots/__pycache__
+/bots/utils/__pycache__
